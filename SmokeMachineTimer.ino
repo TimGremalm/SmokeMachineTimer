@@ -95,11 +95,20 @@ void tick() {
 		digitalWrite(LED_BUILTIN, HIGH);
 		#ifndef USE_PRINT
 		DMXSerial.write(1, smokeLevel);
+		// Use smoke parameters to set color
+		DMXSerial.write(67, smokeOnTime*255);
+		DMXSerial.write(68, smokeOffTime*255);
+		DMXSerial.write(69, smokeLevel);
+		DMXSerial.write(70, 255);
 		#endif
 	} else {
 		digitalWrite(LED_BUILTIN, LOW);
 		#ifndef USE_PRINT
 		DMXSerial.write(1, 0);
+		DMXSerial.write(67, 0);
+		DMXSerial.write(68, 0);
+		DMXSerial.write(69, 0);
+		DMXSerial.write(70, 0);
 		#endif
 	}
 
