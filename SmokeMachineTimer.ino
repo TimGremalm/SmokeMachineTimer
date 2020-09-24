@@ -9,8 +9,27 @@ float smokeOnTime = 0;
 float smokeOffTime = 0;
 uint8_t smokeLevel = 0;
 
+const int SwCode1 = 7;
+const int SwCode2 = 8;
+const int SwCode4 = 11;
+const int SwCode8 = 12;
+
 uint32_t timeSmokeToggled = 0;
 bool stateSmoke = true;
+
+typedef union {
+	struct {
+		unsigned char bit0 : 1;
+		unsigned char bit1 : 1;
+		unsigned char bit2 : 1;
+		unsigned char bit3 : 1;
+		unsigned char bit4 : 1;
+		unsigned char bit5 : 1;
+		unsigned char bit6 : 1;
+		unsigned char bit7 : 1;
+	} u;
+	uint8_t value;
+} SwCode;
 
 void setup() {
 	pinMode(LED_BUILTIN, OUTPUT);
@@ -20,6 +39,10 @@ void setup() {
 	#else
 	DMXSerial.init(DMXController);
 	#endif
+	pinMode(SwCode1, INPUT);
+	pinMode(SwCode2, INPUT);
+	pinMode(SwCode4, INPUT);
+	pinMode(SwCode8, INPUT);
 }
 
 void checkPots() {
@@ -34,7 +57,16 @@ void checkPots() {
 	smokeOffTime = (float)pot2 / 255;
 
 	// Parse multipositionswitch
-	smokeLevel = 255;
+	SwCode posswitch;
+	posswitch.u.bit0 = digitalRead(SwCode1);
+	posswitch.u.bit1 = digitalRead(SwCode2);
+	posswitch.u.bit2 = digitalRead(SwCode4);
+	posswitch.u.bit3 = digitalRead(SwCode8);
+	posswitch.u.bit4 = 0;
+	posswitch.u.bit5 = 0;
+	posswitch.u.bit6 = 0;
+	posswitch.u.bit7 = 0;
+	smokeLevel = posswitch.value*28;
 }
 
 void tick() {
