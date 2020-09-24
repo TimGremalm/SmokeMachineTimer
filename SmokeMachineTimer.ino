@@ -73,7 +73,7 @@ void tick() {
 	// Smoke period
 	float secondsSinceSmokeToggled = ((float)(millis() - timeSmokeToggled) / 1000);
 	float smokeIntervalOn = smokeOnTime*9+1; // 1-10 seconds
-	float smokeIntervalOff = smokeOffTime*9+1; // 1-10 seconds
+	float smokeIntervalOff = smokeOffTime*600+1; // 1-10 seconds
 	if (stateSmoke == true && secondsSinceSmokeToggled > smokeIntervalOn) {
 		#ifdef USE_PRINT
 		Serial.print("Toggle smoke off after");
